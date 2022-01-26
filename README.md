@@ -16,6 +16,10 @@ To use IVAN, the latest version of Docker must be installed on the executing mac
 - CentOS: Version 6 or later
 - Debian: Versions 9 and 10
 - SUSE Linux Enterprise Server (SLES): Versions 11 SP4, 12 SP2, 12 SP3 12 SP4, 12 SP5, 15, 15 SP1, and 15 SP2
+
+#### Download Releases
+
+You can download the latest IVAN release at [https://github.com/CrowdStrike/ivan/releases](https://github.com/CrowdStrike/ivan/releases)
     
 #### CrowdStrike subscription
 
