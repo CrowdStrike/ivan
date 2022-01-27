@@ -19,7 +19,7 @@ To use IVAN, the latest version of Docker must be installed on the executing mac
 
 #### Download Releases
 
-You can download the latest IVAN release at [https://github.com/CrowdStrike/ivan/releases](https://github.com/CrowdStrike/ivan/releases)
+You can download the latest IVAN release at [https://github.com/CrowdStrike/ivan/releases](https://github.com/CrowdStrike/ivan/releases).
     
 #### CrowdStrike subscription
 
@@ -28,35 +28,35 @@ You can download the latest IVAN release at [https://github.com/CrowdStrike/ivan
 
 #### API client
 
-A one-time setup of an API client from Support > API Clients and Keys in the Falcon console is required to use IVAN. For more information about setting up an API client, see [CrowdStrike OAuth2-Based APIs](https://falcon.crowdstrike.com/documentation/46/crowdstrike-oauth2-based-apis#api-clients).
+A one-time setup of an API client from **Support > API Clients and Keys** in the Falcon console is required to use IVAN. For more information about setting up an API client, see [CrowdStrike OAuth2-Based APIs](https://falcon.crowdstrike.com/documentation/46/crowdstrike-oauth2-based-apis#api-clients).
 
-- Client ID and secret: IVAN requires an API client ID and secret to associate the CLI with your CrowdStrike account.
+- **Client ID and secret:** IVAN requires an API client ID and secret to associate the CLI with your CrowdStrike account.
     
-- Falcon Container CLI scope: Your API client must be scoped to Falcon Container CLI with both read and write permissions.
+- **Falcon Container CLI scope:** Your API client must be scoped to **Falcon Container CLI** with both read and write permissions.
     
 
 #### Images
 
-An image must reside in the local Docker daemon of the system where IVAN is used (either built or pulled there) and follow the scheme `repo:tag` (such as `alpine:3.13.2`)
+An image must reside in the local Docker daemon of the system where IVAN is used (either built or pulled there) and follow the scheme `repo:tag` (such as `alpine:3.13.2`).
 
 #### Region
 
-When scanning an image, you pass the -region parameter to specify which CrowdStrike cloud you use (such as `-region us-1`). Available clouds include `us-1`, `us-2`, `us-gov-1`, `eu-1`.
+When scanning an image, you pass the `-region` parameter to specify which CrowdStrike cloud you use (such as `-region us-1`). Available clouds include `us-1`, `us-2`, `us-gov-1`, `eu-1`.
 
 ## Install the IVAN CLI binary
 
-Download the binary to install the IVAN CLI on your machine. Put the binary in a directory that is in your `$PATH` (such as `/usr/local/bin`) and make sure to give the binary execution permissions.
+[Download the IVAN CLI](https://github.com/CrowdStrike/ivan/releases) for your OS and place the binary in your `$PATH` to install (such as `/usr/local/bin`). Then run `chmod u+x /path/to/file` to make the binary executable.
 
 ## Scan an image
 
-Run IVAN to scan an image. Use the `./ivan` command and specify a region and the image repository name and tag to scan.
+Run IVAN to scan an image for vulnerabilities. Use the `./ivan` command and specify the `-region` and `-image repo:tag`.
 
   
 ```bash
 ./ivan -region us-1 -image alpine:3.13.2
 ```
   
-IVAN will prompt you to enter the API client ID and secret when you run it first. After that, your API client ID and secret are stored in `.crowdstrike/config.json` and automatically applied in subsequent scans.
+The first time you run IVAN, you will be prompted to enter your API client ID and secret. After that, your API client ID and secret are stored in `$HOME/crowdstrike/config.json` and automatically applied in subsequent scans.
 
 ## Understanding IVAN CLI results
 
@@ -85,15 +85,15 @@ The scan results include the following vulnerability details:
 
 |Field  | Nested Field | Description |
 |--|--|--|
-|count  |  | The total number of identified vulnerabilities. |
-|layerHash  |  | The hash for the layer that has the vulnerability. |
-|os  |  | The operating system and version. |
-|vulnerabilities  |  | An array of detected vulnerabilities and details. |
-|  |CVEID  | The Common Vulnerabilities and Exposures (CVE) ID. |
-|  |Product  | The name of the product/package associated with the vulnerability. |
-|  |Severity  | Severity of the CVE. One of `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN`, or `NONE`. |
-|  |Version | The version of the product associated with the vulnerability. |
-|  |Description | A description of the CVE. |
+| `count`  |  | The total number of identified vulnerabilities. |
+| `layerHash`  |  | The hash for the layer that has the vulnerability. |
+| `os`  |  | The operating system and version. |
+| `vulnerabilities`  |  | An array of detected vulnerabilities and details. |
+|  | `CVEID`  | The Common Vulnerabilities and Exposures (CVE) ID. |
+|  | `Product`  | The name of the product/package associated with the vulnerability. |
+|  | `Severity`  | Severity of the CVE. One of `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN`, or `NONE`. |
+|  | `Version` | The version of the product associated with the vulnerability. |
+|  | `Description` | A description of the CVE. |
 
 ## Additional options
 
