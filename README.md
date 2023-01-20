@@ -1,107 +1,231 @@
 ## Overview
 
-Image Vulnerability Analysis (IVAN) is a command-line container scanning tool that looks for OS vulnerabilities in your Docker images. IVAN performs local scanning on images in your Docker daemon and sends the package metadata to the CrowdStrike cloud for analysis. When processing is complete, a summary report displays in your terminal with detailed information about identified vulnerabilities.
+Falcon Image Vulnerability Analysis (IVAN) is a command-line image assessment tool. It works by creating an inventory of packages on an image and then sending the package metadata to the CrowdStrike cloud for assessment.
+
+IVAN results are returned as a JSON report in the terminal. IVAN differs from other methods of image assessment because only the image metadata is uploaded to the CrowdStrike cloud. The image and metadata do not appear anywhere in the Falcon Console.
 
 ### Requirements
 
-#### Docker
+- **Docker**: You must have the latest version of Docker.
+- **CrowdStrike subscription**: Falcon Cloud Workload Protection
+- **API client**: You can create a new API client on [API Client and keys](https://falcon.crowdstrike.com/support/api-clients-and-keys).
+	- Your API client must have **Falcon Container CLI** scope with `Write` permission.
 
-To use IVAN, the latest version of Docker must be installed on the executing machine. Currently, podman and other container runtimes are unsupported.
+> **Note**
+> To use IVAN, the latest version of Docker must be installed on the executing machine. Currently, podman and other container runtimes are unsupported.
 
 #### Supported operating systems
 
-- Alpine Linux: Version 3.10 or later
-- Red Hat Enterprise Linux (RHEL): Version 7 or later
-- Ubuntu: All Falcon-supported versions
-- CentOS: Version 6 or later
-- Debian: Versions 9 and 10
-- SUSE Linux Enterprise Server (SLES): Versions 11 SP4, 12 SP2, 12 SP3 12 SP4, 12 SP5, 15, 15 SP1, and 15 SP2
+| OS | Supported versions |
+| ------ | ------ |
+| Alpine Linux      | 3.9 through 3.17.9      |
+|Amazon Linux|1, 2|
+| CentOS      | 7 through 8.3      |
+| Debian GNU      | 9, 10, 11      |
+|Oracle Linux|6.0 through 8.9|
+| Red Hat Enterprise Linux (RHEL)      | 7 through 8.6      |
+| SUSE Linux Enterprise Server (SLES)      | 11.4, 12.2, 12.3, 12.4, 12.5, 15, 15.0, 15.1, 15.2 |
+| Ubuntu      | 16.04, 18.04, 20.04, 22.04      |
 
-#### Download Releases
+#### IVAN releases
 
 You can download the latest IVAN release at [https://github.com/CrowdStrike/ivan/releases](https://github.com/CrowdStrike/ivan/releases).
-    
-#### CrowdStrike subscription
 
-- Cloud Workload Protection
-    
+### Install IVAN
+Download IVAN and make it executable.
 
-#### API client
+1. Download the latest version of IVAN for your OS from [here](https://github.com/CrowdStrike/ivan/releases).
+2. Extract the archive.
+	In a terminal, run:
+	```sh
+	tar xvzf ivan_<version>.tar.gz
+	```
+3. Make the binary executable.
+	In a terminal, run:
+	```sh
+	chmod +ux ivan
+	```
+4. (Optional) Move the binary into `$PATH` (example:_/usr/local/bin_).
 
-A one-time setup of an API client from **Support > API Clients and Keys** in the Falcon console is required to use IVAN. For more information about setting up an API client, see [CrowdStrike OAuth2-Based APIs](https://falcon.crowdstrike.com/documentation/46/crowdstrike-oauth2-based-apis#api-clients).
+### Authenticate IVAN
+Provide IVAN with your CrowdStrike API client ID and secret. You are prompted for these credentials the first time you run IVAN or when you use the `-reset-creds` option.
 
-- **Client ID and secret:** IVAN requires an API client ID and secret to associate the CLI with your CrowdStrike account.
-    
-- **Falcon Container CLI scope:** Your API client must be scoped to **Falcon Container CLI** with both read and write permissions.
-    
-
-#### Images
-
-An image must reside in the local Docker daemon of the system where IVAN is used (either built or pulled there) and follow the scheme `repo:tag` (such as `alpine:3.13.2`).
-
-#### Region
-
-When scanning an image, you pass the `-region` parameter to specify which CrowdStrike cloud you use (such as `-region us-1`). Available clouds include `us-1`, `us-2`, `us-gov-1`, `eu-1`.
-
-## Install the IVAN CLI binary
-
-[Download the IVAN CLI](https://github.com/CrowdStrike/ivan/releases) for your OS and place the binary in your `$PATH` to install (such as `/usr/local/bin`). Then run `chmod u+x /path/to/file` to make the binary executable.
-
-## Scan an image
-
-Run IVAN to scan an image for vulnerabilities. Use the `./ivan` command and specify the `-region` and `-image repo:tag`.
-
-  
-```bash
-./ivan -region us-1 -image alpine:3.13.2
+If you want to set up non-interactive shell login, set the API client ID and secret as environment variables:
+```sh
+export FALCON_CLIENT_ID=<clientID>
+export FALCON_CLIENT_SECRET=<clientSecret>
 ```
-  
-The first time you run IVAN, you will be prompted to enter your API client ID and secret. After that, your API client ID and secret are stored in `$HOME/crowdstrike/config.json` and automatically applied in subsequent scans.
 
-## Understanding IVAN CLI results
+> **Note**
+> To create an API client, see [API Client and keys](https://falcon.crowdstrike.com/support/api-clients-and-keys).
 
-When processing is complete, a JSON output of all detected vulnerabilities in the image displays in your terminal.
-
-Example result output
+Your API credentials are applied automatically for subsequent image assessments. The credentials are stored in _$HOME/crowdstrike/config.json_.
 
 ```json
 {
-	"count": 34,
-	"layerHash": "cb381a32b2296e4eb5af3f84092a2e6685e88adbc54ee0768a1a1010ce6376c7",
-	"os": "Alpine 3.13.2",
-	"vulnerabilities": [
-		{
-		"CVEID": "CVE-2021-28831",
-		"Product": "busybox",
-		"Severity": "HIGH",
-		"Version": "1.32.1-r3",
-		"Description": "decompress_gunzip.c in BusyBox through 1.32.1 mishandles the error bit on the huft_build result pointer, with a resultant invalid free or segmentation fault, via malformed gzip data."
-		}
-	]
+ "region": {
+   "client_id": "e2f…d06",
+   "client_secret": "aba…4To"
+ },
+ "region2": {
+   "client_id": "l9f…d06",
+   "client_secret": "cdc…j4To"
+ },
+ "region3": {
+   "client_id": "p6f…d06",
+   "client_secret": "plo…nj4To"
+ }
 }
 ```
 
-The scan results include the following vulnerability details:
+#### Image assessment location
 
-|Field  | Nested Field | Description |
-|--|--|--|
-| `count`  |  | The total number of identified vulnerabilities. |
-| `layerHash`  |  | The hash for the layer that has the vulnerability. |
-| `os`  |  | The operating system and version. |
-| `vulnerabilities`  |  | An array of detected vulnerabilities and details. |
-|  | `CVEID`  | The Common Vulnerabilities and Exposures (CVE) ID. |
-|  | `Product`  | The name of the product/package associated with the vulnerability. |
-|  | `Severity`  | Severity of the CVE. One of `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `UNKNOWN`, or `NONE`. |
-|  | `Version` | The version of the product associated with the vulnerability. |
-|  | `Description` | A description of the CVE. |
+IVAN assesses images through the Docker daemon. Use docker pull to make images available for IVAN, or load local images to Docker by running the following command:
 
-## Additional options
+```sh
+docker load < <image_name>
+```
 
-Use `--help` to see other CLI options that might come in handy when using IVAN.
+### IVAN synopsis
 
-|Option | Description |
-| -- | -- |
-| `-image` | The image to check for vulnerabilities. Images must be Docker pulled before using ivan. |
-| `-license` | Print the package MIT license.|
-| `-reset-creds` | Remove the current API client ID and secret for the given region and provide a new client/secret pair. |
-| `-timeout` | The timeout for calling the cloud API and waiting for its response (default is 30 seconds). To modify the timeout, enter the number of seconds (as an integer) for the new timeout period. |
+Use this syntax to run IVAN image assessment on a Docker image.
+
+`ivan [options] [region] [image]`
+
+**Image (required)**
+
+`-image <imageName:tag>`
+
+Specifies the image to assess. If a tag is not specified, Docker appends latest tag to the image name.
+
+**Region (required)**
+
+`-region <string>`
+
+Sets the CrowdStrike cloud region. Possible values are `us-1`, `us-2`, `eu-1`, `us-gov-1`.
+
+**Options**
+
+`-dry-run`
+
+Lists the image packages but doesn’t send it to the CrowdStrike cloud for image assessment.
+
+`-license`
+
+Prints the IVAN license to the terminal.
+
+`-timeout <integer>`
+
+Sets the client timeout duration. The default is 30 seconds.
+
+`-reset-creds`
+
+Initiates terminal prompt to re-enter API client ID and password.
+
+### Image assessment report
+
+The report returns the following info in JSON format:
+
+| Object          | Type    | Description                                                                           |
+| --------------- | ------- | ------------------------------------------------------------------------------------- |
+| count           | integer | The count of vulnerabilities on image                                                 |
+| layerHash       | string  | The layer hash containing the vulnerabilities                                         |
+| os              | string  | The OS and version on the image                                                       |
+| vulnerabilities | array   | An array of vulnerabilities and their info                                            |
+| CVEID           | string  | The Common Vulnerabilities and Exposures (CVE) ID of the vulnerability                |
+| Product         | string  | The product name associated with the vulnerability                                    |
+| Severity        | string  | The CVE severity of the vulnerability: CRITICAL, HIGH, MEDIUM, LOW, UNKNOWN, or NONE. |
+| Version         | string  | The version of the product associated with the vulnerability                          |
+| Description     | string  | The CVE description                                                                   |
+
+### Examples using IVAN
+
+Here are some examples of the input and output for assessing images with IVAN.
+
+**Assess an image**
+
+```sh
+ivan -region us-1 -image alpine:3.17.0
+```
+
+_Output when vulnerabilities are found:_
+```json
+{
+  "count": 2,
+  "layerHash": "7528…c933",
+  "os": "Alpine 3.17.0",
+  "vulnerabilities": [
+   {
+    "CVEID": "CVE-2022-3996",
+    "Product": "libcrypto3",
+    "Severity": "HIGH",
+    "Version": "3.0.7-r0",
+    "Description": "If an X.509 certificate … functions."
+   },
+   {
+    "CVEID": "CVE-2022-3996",
+    "Product": "libssl3",
+    "Severity": "HIGH",
+    "Version": "3.0.7-r0",
+    "Description": "If an X.509 certificate … functions."
+   }
+  ]
+ }
+```
+
+_Output when no vulnerabilities are found:_
+
+```json
+{
+  "count": 0,
+  "layerHash": "b1a6…7392",
+  "os": "Ubuntu 20.04",
+  "vulnerabilities": null
+ }
+```
+
+**List the inventory of packages on an image**
+```sh
+ivan -dry-run -region us-1 -image myApp:latest
+```
+
+> **Note**
+> The `-dry-run` option blocks the inventory from being sent to the CrowdStrike cloud for image assessment. The inventory shows a complete list of packages found on the image. It does not show package vulnerabilities.
+
+```json
+{
+  "osversion": "Ubuntu 16.04",
+  "packages": [
+    {
+      "Vendor": "Ubuntu Core developers",
+      "Product": "libquadmath0",
+      "MajorVersion": "5.4.0-6ubuntu1~16.04.12",
+      "SoftwareArchitecture": "amd64",
+      "PackageProvider": "DPKG",
+      "PackageSource": "libquadmath0 5.4.0-6ubuntu1~16.04.12"
+    },
+    
+    ...
+    
+],
+"applicationPackages": [
+    {
+      "type": "PYTHON",
+      "libraries": [
+        {
+          "Name": "pip",
+          "Version": "19.0.3",
+          "License": "Unknown",
+          "LayerHash": "2fcf…c367f"
+        },
+        {
+          "Name": "PyYAML",
+          "Version": "5.4.1",
+          "License": "Unknown",
+          "LayerHash": "ea8d…507e1"
+        }
+      ]
+    }
+  ]
+}
+```
