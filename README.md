@@ -4,6 +4,19 @@ Falcon Image Vulnerability Analysis (IVAN) is a command-line image assessment to
 
 IVAN results are returned as a JSON report in the terminal. IVAN differs from other methods of image assessment because only the image metadata is uploaded to the CrowdStrike cloud. The image and metadata do not appear anywhere in the Falcon Console.
 
+### Comparing assessment methods
+
+|Capability |IVAN     |Registry connection|Image push |
+|---|---|---|---|
+|Image being assessed stays local        |Y      |N                |N       |
+|Assessment results are available in Falcon console        |N|Y|Y|
+|Assessment results are available via API       |N|Y|Y|
+|Container Software Bill of Materials (SBOM) includes OS and application package, and version information        |N|Y|Y|
+|OS package vulnerability assessment        |N|Y|Y|
+|Software Composition Analysis (SCA) includes python, javascript, go, ruby, and java        ||N|Y|Y|
+|Misconfiguration detection includes hardcoded secrets and industry best practice benchmarking        |N|Y|Y|
+|Malware detection        |N|Y|Y|
+|Vulnerability exceptions and allow-listing support        |Y|Y|Y|
 ### Requirements
 
 - **Docker**: You must have the latest version of Docker.
