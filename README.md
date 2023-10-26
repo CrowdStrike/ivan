@@ -99,41 +99,24 @@ IVAN assesses images through the Docker daemon. Use docker pull to make images a
 docker load < <image_name>
 ```
 
-### IVAN synopsis
+### IVAN General usage
 
 Use this syntax to run IVAN image assessment on a Docker image.
 
 `ivan [options] [region] [image]`
 
-**Image (required)**
+#### IVAN CLI Flags
 
-`-image <imageName:tag>`
-
-Specifies the image to assess. If a tag is not specified, Docker appends latest tag to the image name.
-
-**Region (required)**
-
-`-region <string>`
-
-Sets the CrowdStrike cloud region. Possible values are `us-1`, `us-2`, `eu-1`, `us-gov-1`.
-
-**Options**
-
-`-dry-run`
-
-Lists the image packages but doesn’t send it to the CrowdStrike cloud for image assessment.
-
-`-license`
-
-Prints the IVAN license to the terminal.
-
-`-timeout <integer>`
-
-Sets the client timeout duration. The default is 30 seconds.
-
-`-reset-creds`
-
-Initiates terminal prompt to re-enter API client ID and password.
+| Flag            | Required    | Description                                                                           |
+| --------------- | ----------- | ------------------------------------------------------------------------------------- |
+| `-image <imageName:tag>` | Required | Specifies the image to assess. If a tag is not specified, Docker appends latest tag to the image name. |
+| `-region <string>` | Required | Sets the CrowdStrike cloud region. Possible values are `us-1`, `us-2`, `eu-1`, `us-gov-1`. |
+| `-dry-run` | Optional | Lists the image packages but doesn’t send it to the CrowdStrike cloud for image assessment. |
+| `-license` | Optional | Prints the IVAN license to the terminal. |
+| `-runtime <string>` | Optional | Choose one of container runtimes. Possible values are `docker`, `podman`, `containerd`, `crio`. The default is `docker`. |
+| `-socketpath <string>` | Optional | Specify the .sock path of the runtime if different from default else leave empty. The default is `unix:///run/docker.sock`. |
+| `-timeout <integer>` | Optional | Sets the client timeout duration. The default is 30 seconds. |
+| `-reset-creds` | Optional | Initiates terminal prompt to re-enter API client ID and password. |
 
 ### Image assessment report
 
