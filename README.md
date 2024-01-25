@@ -13,7 +13,7 @@ IVAN results are returned as a JSON report in the terminal. IVAN differs from ot
 |Assessment results are available via API       |N|Y|Y|
 |Container Software Bill of Materials (SBOM) includes OS and application package, and version information        |N|Y|Y|
 |OS package vulnerability assessment        |N|Y|Y|
-|Software Composition Analysis (SCA) includes python, javascript, go, ruby, and java        ||N|Y|Y|
+|Software Composition Analysis (SCA) includes python, javascript, go, ruby, and java        |N|Y|Y|
 |Misconfiguration detection includes hardcoded secrets and industry best practice benchmarking        |N|Y|Y|
 |Malware detection        |N|Y|Y|
 |Vulnerability exceptions and allow-listing support        |Y|Y|Y|
