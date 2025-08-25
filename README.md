@@ -1,5 +1,13 @@
 ## Overview
 
+> **⚠️ DEPRECATION WARNING**
+> 
+> **IVAN is deprecated and will be discontinued in a future release.** 
+> 
+> Please migrate to the **Falcon Cloud Security CLI (FCS CLI)** for container image vulnerability assessment. The FCS CLI provides enhanced functionality, better performance, and continued support.
+> 
+> For new implementations, please use FCS CLI instead of IVAN.
+
 Falcon Image Vulnerability Analysis (IVAN) is a command-line image assessment tool. It works by creating an inventory of packages on an image and then sending the package metadata to the CrowdStrike cloud for assessment.
 
 IVAN results are returned as a JSON report in the terminal. IVAN differs from other methods of image assessment because only the image metadata is uploaded to the CrowdStrike cloud. The image and metadata do not appear anywhere in the Falcon Console.
